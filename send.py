@@ -14,8 +14,7 @@ def encode(s):
         es += "%d-"%ord(c)
     return es[:-1]
 
-#with open("testmail.txt","r") as f:
-#    msg = f.read()
+# Default message
 msg = """From: hanno@hanno-rein.de
 To: hanno@hanno-rein.de
 Subject: Message from Hanno Rein (via dnschat)
@@ -23,6 +22,10 @@ Subject: Message from Hanno Rein (via dnschat)
 Hello Hanno. This is a test!
 """
 
+# Read message from file.
+if os.path.isfile("msg.txt"):
+    with open("msg.txt","r") as f:
+        msg = f.read()
 
 i = 0
 chunk = 10
