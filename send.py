@@ -16,11 +16,11 @@ def encode(s):
 
 #with open("testmail.txt","r") as f:
 #    msg = f.read()
-msg = """ From: hanno@hanno-rein.de
+msg = """From: hanno@hanno-rein.de
 To: hanno@hanno-rein.de
 Subject: Message from Hanno Rein (via dnschat)
 
-Hello!
+Hello Hanno. This is a test!
 """
 
 
