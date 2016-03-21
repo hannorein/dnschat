@@ -37,23 +37,22 @@ class DynamicResolver(object):
 				f.write(msg)
 			print("Receiving message part.")
 		elif msgtype=="sen":
-			if os.path.isfile("msg.txt"):
-				server = smtplib.SMTP('smtp.gmail.com:587')
-				server.ehlo()
-				server.starttls()
-				server.login(fromaddr,googlesecret)
+			t = b"1.0.0.3"
+			if os.path.isfile("msg.txt"): #only send mail once
+				sserver = smtplib.SMTP('smtp.gmail.com:587')
+				sserver.ehlo()
+				sserver.starttls()
+				sserver.login(fromaddr,googlesecret)
 				with open("msg.txt","r") as f:
 				    msg = f.read().strip()
 				for l in msg.split("\n"):
 					if l[0:3] == "To:":
 						toaddr = l[4:].strip()
-						print "to: " +toaddr
-
-				server.sendmail(fromaddr, toaddr, msg)
+				sserver.sendmail(fromaddr, toaddr, msg)
 				print("Sending message.")
-				server.quit()
-				t = b"1.0.0.99"
+				t = b"1.0.0.4"
 				os.remove("msg.txt")
+				sserver.quit()
 		answer = dns.RRHeader( name=name, payload=dns.Record_A(address=t))
 		return [answer], [], []
 	return dns.RRHeader( name=name, payload=dns.Record_A(address=b'1.2.3.4')), [], []
