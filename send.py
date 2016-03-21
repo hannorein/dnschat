@@ -14,8 +14,15 @@ def encode(s):
         es += "%d-"%ord(c)
     return es[:-1]
 
-with open("testmail.txt","r") as f:
-    msg = f.read()
+#with open("testmail.txt","r") as f:
+#    msg = f.read()
+msg = """ From: hanno@hanno-rein.de
+To: hanno@hanno-rein.de
+Subject: Message from Hanno Rein (via dnschat)
+
+Hello!
+"""
+
 
 i = 0
 chunk = 10
