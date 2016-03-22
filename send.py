@@ -2,7 +2,6 @@ import random
 import os
 import string
 import socket
-import urllib
 with open("secret.txt","r") as f:
     secret = f.read().strip()
 with open("host.txt","r") as f:
