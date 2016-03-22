@@ -13,8 +13,10 @@ def encode(s):
         es += "%d-"%ord(c)
     return es[:-1]
 
-salt = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-hn = encode("get")+".rec."+salt+"."+secret+"."+host
+def get_salt():
+    return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
+
+hn = encode("get")+".rec."+get_salt()+"."+secret+"."+host
 response = socket.gethostbyname(hn)
 if response == "1.0.0.5":
     print("No more messages in cache.")

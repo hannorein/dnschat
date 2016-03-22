@@ -13,6 +13,10 @@ def encode(s):
         es += "%d-"%ord(c)
     return es[:-1]
 
+def get_salt():
+    return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
+
+
 # Default message
 msg = """From: hanno@hanno-rein.de
 To: hanno@hanno-rein.de
@@ -30,18 +34,16 @@ i = 0
 chunk = 10
 while i<len(msg):
     pmsg = (msg[i:])[:chunk]
-    salt = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     if i==0:
         msgtype = "new"
     else:
         msgtype = "con"
-    hn = encode(pmsg)+"."+msgtype+"."+salt+"."+secret+"."+host
+    hn = encode(pmsg)+"."+msgtype+"."+get_salt()+"."+secret+"."+host
     print(hn)
     print(socket.gethostbyname(hn))
     i += chunk
 
-salt = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-hn = "0.sen."+salt+"."+secret+"."+host
+hn = "0.sen."+get_salt()+"."+secret+"."+host
 print(hn)
 print(socket.gethostbyname(hn))
 print("Sent.")
