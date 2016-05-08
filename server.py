@@ -59,26 +59,6 @@ class DynamicResolver(object):
 				print("Sending message.")
 				t = b"1.0.0.200"
 				sserver.quit()
-		elif msgtype=="rec":
-			if os.path.isfile("msg_out.txt"):  #new messages arrived?
-                with open("msg_out.txt","r") as f:
-                    msg = f.read().strip()
-                pmsg = msg[:4]
-                while len(pmsg)<4:
-                    pmsg += " "
-                if len(msg)>4:
-                    with open("msg_out.txt","w") as f:
-                        f.write(msg[4:])
-                else:
-                    os.remove("msg.txt")
-                t = ""
-                for c in pmsg:
-                    t += "%d."%ord(c)
-			else:
-                t = b"1.0.0.5"
-
-
-
 		answer = dns.RRHeader( name=name, payload=dns.Record_A(address=t))
 		return [answer], [], []
 	return dns.RRHeader( name=name, payload=dns.Record_A(address=b'1.2.3.4')), [], []
