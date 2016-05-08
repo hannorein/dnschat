@@ -19,16 +19,23 @@ def get_salt():
 print "Checking server for length of message...", 
 hn = "get.m."+get_salt()+"."+secret+"."+host
 chunks = int(socket.gethostbyname(hn).split(".")[-1])
-print("found %d chunks. " %chunks)
+if chunks ==255:
+    print("empty.")
+else:
+    print("found %d chunks. " %chunks)
 
-fullmsg = ""
-for i in range(chunks):
-    print "Retrieving chunk %02d of %02d..." % (i+1,chunks), 
-    hn = ("get.r%02d."%i)+get_salt()+"."+secret+"."+host
-    ips = socket.gethostbyname(hn).split(".")
-    part = "".join([chr(int(ip)) for ip in ips])
-    print "done." 
-    fullmsg += part
-print "\nFull message reads:\n\n" 
-print(fullmsg)
-print " " 
+    fullmsg = ""
+    for i in range(chunks):
+        print "Retrieving chunk %02d of %02d..." % (i+1,chunks), 
+        hn = ("get.r%02d."%i)+get_salt()+"."+secret+"."+host
+        ips = socket.gethostbyname(hn).split(".")
+        part = "".join([chr(int(ip)) for ip in ips])
+        print "done." 
+        fullmsg += part
+    print "\nFull message reads:\n\n" 
+    print(fullmsg)
+    print " " 
+    #print "Deleting message...",
+    #hn = "get.emp."+get_salt()+"."+secret+"."+host
+    #chunks = int(socket.gethostbyname(hn).split(".")[-1])
+    #print("done")

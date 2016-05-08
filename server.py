@@ -67,24 +67,32 @@ class DynamicResolver(object):
 			chunk = 4
 			l = math.ceil(float(len(msg))/4)
 			t = "1.0.0.%d"%l
+		
+        elif msgtype=="emp":
+			with open("msg.txt","w") as f:
+				f.write("(empty)")
+			t = "1.0.0.100"
 			
 		elif msgtype[0]=="r":
 			t = b"1.0.0.202"
 			with open("msg.txt","r") as f:
 				msg = f.read()
-			chunk = 4
-			j = int(msgtype[1:3])
-			i= 0
-			part = 0
-			while i<len(msg):
-				pmsg = (msg[i:])[:chunk]
-				while len(pmsg)<4:
-					pmsg += " "
-				i+= chunk
-				ip = ".".join(["%d"%(min(255,ord(c))) for c in pmsg])
-				if part==j:
-					t = ip
-				part += 1
+            if msg == "(empty)":
+			    t = b"1.0.0.255"
+            else:
+                chunk = 4
+                j = int(msgtype[1:3])
+                i= 0
+                part = 0
+                while i<len(msg):
+                    pmsg = (msg[i:])[:chunk]
+                    while len(pmsg)<4:
+                        pmsg += " "
+                    i+= chunk
+                    ip = ".".join(["%d"%(min(255,ord(c))) for c in pmsg])
+                    if part==j:
+                        t = ip
+                    part += 1
 
 
 		answer = dns.RRHeader( name=name, payload=dns.Record_A(address=t))
