@@ -1,6 +1,7 @@
 from twisted.internet import reactor, defer
 from twisted.names import client, dns,  server
 import time
+import math
 import smtplib
 import glob
 import os
@@ -60,18 +61,30 @@ class DynamicResolver(object):
 				print("Sending message.")
 				t = b"1.0.0.200"
 				sserver.quit()
+		elif msgtype[0]=="m":
+			with open("msg.txt","r") as f:
+				msg = f.read()
+			chunk = 4
+			l = math.ceil(float(len(msg))/4)
+			t = "1.0.0.%d"%l
+			
 		elif msgtype[0]=="r":
 			t = b"1.0.0.202"
 			with open("msg.txt","r") as f:
 				msg = f.read()
-			i = int(msgtype[1:3])
-			j = 0
 			chunk = 4
-			while j<len(msg):
-				pmsg = (msg[j:])[:chunk]
-				j+= chunk
-				if i ==j:
-					print(ord(pmsg[0]))
+			j = int(msgtype[1:3])
+			i= 0
+			part = 0
+			while i<len(msg):
+				pmsg = (msg[i:])[:chunk]
+				while len(pmsg)<4:
+					pmsg += " "
+				i+= chunk
+				ip = ".".join(["%d"%(min(255,ord(c))) for c in pmsg])
+				if part==j:
+					t = ip
+				part += 1
 
 
 		answer = dns.RRHeader( name=name, payload=dns.Record_A(address=t))
