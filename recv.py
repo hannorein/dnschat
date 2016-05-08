@@ -17,17 +17,14 @@ def get_salt():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
 
 print "Checking server for length of message...", 
-hn = "m."+get_salt()+"."+secret+"."+host
-hn = "heise.de" # TODO
+hn = "get.m."+get_salt()+"."+secret+"."+host
 chunks = int(socket.gethostbyname(hn).split(".")[-1])
 print("found %d chunks. " %chunks)
 
-chunks = 2 # TODO
 fullmsg = ""
 for i in range(chunks):
     print "Retrieving chunk %02d of %02d..." % (i+1,chunks), 
-    hn = ("r%02d."%i)+get_salt()+"."+secret+"."+host
-    hn = "heise.de"  # TODO
+    hn = ("get.r%02d."%i)+get_salt()+"."+secret+"."+host
     ips = socket.gethostbyname(hn).split(".")
     part = "".join([chr(int(ip)) for ip in ips])
     print "done." 
