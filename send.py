@@ -31,19 +31,26 @@ if os.path.isfile("msg.txt"):
         msg = f.read()
 
 i = 0
+part = 0
 chunk = 10
 while i<len(msg):
     pmsg = (msg[i:])[:chunk]
-    if i==0:
-        msgtype = "new"
-    else:
-        msgtype = "con"
+    msgtype = "c%02d"%part
     hn = encode(pmsg)+"."+msgtype+"."+get_salt()+"."+secret+"."+host
     print(hn)
     print(socket.gethostbyname(hn))
+    part +=1
     i += chunk
 
-hn = "0.sen."+get_salt()+"."+secret+"."+host
+hn = "msg.p."+get_salt()+"."+secret+"."+host
 print(hn)
-print(socket.gethostbyname(hn))
-print("Sent.")
+rec = int(socket.gethostbyname(hn).split(".")[-1])
+print(rec)
+if rec==part:
+    print("Chunks Matching. Will send.")
+    hn = ("c%02d.sen."%part)+get_salt()+"."+secret+"."+host
+    print(hn)
+    print(socket.gethostbyname(hn))
+    print("Sent.")
+else:
+    print("Chunks don't match up. Not sent. Try again.")
