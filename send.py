@@ -1,6 +1,7 @@
 import random
 import os
 import string
+import math
 import socket
 with open("secret.txt","r") as f:
     secret = f.read().strip()
@@ -36,21 +37,21 @@ chunk = 10
 while i<len(msg):
     pmsg = (msg[i:])[:chunk]
     msgtype = "c%02d"%part
+    print "Sending chunk %02d of %02d... " %(part+1, math.ceil(float(len(msg))/chunk)), 
     hn = encode(pmsg)+"."+msgtype+"."+get_salt()+"."+secret+"."+host
-    print(hn)
-    print(socket.gethostbyname(hn))
+    ip = int(socket.gethostbyname(hn).split(".")[-1])
+    print "Server has now %0d chunks." % ip
+
     part +=1
     i += chunk
 
+print "\nChecking if server has all %d chunks..." % part, 
 hn = "msg.p."+get_salt()+"."+secret+"."+host
-print(hn)
 rec = int(socket.gethostbyname(hn).split(".")[-1])
-print(rec)
 if rec==part:
-    print("Chunks Matching. Will send.")
+    print("yes. Will send message now.")
     hn = ("c%02d.sen."%part)+get_salt()+"."+secret+"."+host
-    print(hn)
     print(socket.gethostbyname(hn))
     print("Sent.")
 else:
-    print("Chunks don't match up. Not sent. Try again.")
+    print("no. Something went wrong. Message not sent. Try again.")
