@@ -16,20 +16,22 @@ def encode(s):
 def get_salt():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
 
-
+print "Checking server for length of message...", 
 hn = "m."+get_salt()+"."+secret+"."+host
-hn = "heise.de"
+hn = "heise.de" # TODO
 chunks = int(socket.gethostbyname(hn).split(".")[-1])
-print("Found %d chunks. " %chunks)
+print("found %d chunks. " %chunks)
 
-chunks = 2
+chunks = 2 # TODO
 fullmsg = ""
 for i in range(chunks):
+    print "Retrieving chunk %02d of %02d..." % (i+1,chunks), 
     hn = ("r%02d."%i)+get_salt()+"."+secret+"."+host
-    hn = "heise.de"
+    hn = "heise.de"  # TODO
     ips = socket.gethostbyname(hn).split(".")
     part = "".join([chr(int(ip)) for ip in ips])
-    print ".", 
+    print "done." 
     fullmsg += part
-print "\n" 
+print "\nFull message reads:\n\n" 
 print(fullmsg)
+print " " 

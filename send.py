@@ -37,10 +37,10 @@ chunk = 10
 while i<len(msg):
     pmsg = (msg[i:])[:chunk]
     msgtype = "c%02d"%part
-    print "Sending chunk %02d of %02d... " %(part+1, math.ceil(float(len(msg))/chunk)), 
+    print "Sending chunk %02d of %02d..." %(part+1, math.ceil(float(len(msg))/chunk)), 
     hn = encode(pmsg)+"."+msgtype+"."+get_salt()+"."+secret+"."+host
     ip = int(socket.gethostbyname(hn).split(".")[-1])
-    print "Server has now %0d chunks." % ip
+    print "server has now %0d chunks." % ip
 
     part +=1
     i += chunk
