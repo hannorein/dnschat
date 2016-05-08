@@ -16,10 +16,20 @@ def encode(s):
 def get_salt():
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
 
-hn = encode("get")+".rec."+get_salt()+"."+secret+"."+host
-response = socket.gethostbyname(hn)
-if response == "1.0.0.5":
-    print("No more messages in cache.")
-else:
-    for c in response.split("."):
-        print(char(int(c)))
+
+hn = "m."+get_salt()+"."+secret+"."+host
+hn = "heise.de"
+chunks = int(socket.gethostbyname(hn).split(".")[-1])
+print("Found %d chunks. " %chunks)
+
+chunks = 2
+fullmsg = ""
+for i in range(chunks):
+    hn = ("r%02d."%i)+get_salt()+"."+secret+"."+host
+    hn = "heise.de"
+    ips = socket.gethostbyname(hn).split(".")
+    part = "".join([chr(int(ip)) for ip in ips])
+    print ".", 
+    fullmsg += part
+print "\n" 
+print(fullmsg)
