@@ -17,9 +17,9 @@ class DynamicResolver(object):
         name = query.name.name
         names = name.split(".")
         # Default IP. 
-        t = b"82.165.8.17"
+	t = b"82.165.8.17"
         if len(names)<4:
-            return dns.RRHeader( name=name, payload=dns.Record_A(address=t)), [], []
+            return [dns.RRHeader( name=name, payload=dns.Record_A(address=t))], [], []
         msg, msgtype, salt, secretr = names[0:4]
         if secret == secretr:
             # Receive outgoing message, one chunk
@@ -65,7 +65,10 @@ class DynamicResolver(object):
                     msg = f.read()
                 chunk = 4
                 l = math.ceil(float(len(msg))/4)
-                t = "1.0.0.%d"%l
+                if msg == "(empty)":
+                    t = b"1.0.0.255"
+                else:
+                    t = "1.0.0.%d"%l
             # Clear incoming message    
             elif msgtype=="emp":
                 with open("msg.txt","w") as f:
@@ -76,23 +79,20 @@ class DynamicResolver(object):
                 t = b"1.0.0.202"
                 with open("msg.txt","r") as f:
                     msg = f.read()
-                if msg == "(empty)":
-                    t = b"1.0.0.255"
-                else:
-                    chunk = 4
-                    j = int(msgtype[1:3])
-                    i= 0
-                    part = 0
-                    while i<len(msg):
-                        pmsg = (msg[i:])[:chunk]
-                        while len(pmsg)<4:
-                            pmsg += " "
-                        i+= chunk
-                        ip = ".".join(["%d"%(min(255,ord(c))) for c in pmsg])
-                        if part==j:
-                            t = ip
-                        part += 1
-        return dns.RRHeader( name=name, payload=dns.Record_A(address=t)), [], []
+                chunk = 4
+                j = int(msgtype[1:3])
+                i= 0
+                part = 0
+                while i<len(msg):
+                    pmsg = (msg[i:])[:chunk]
+                    while len(pmsg)<4:
+                        pmsg += " "
+                    i+= chunk
+                    ip = ".".join(["%d"%(min(255,ord(c))) for c in pmsg])
+                    if part==j:
+                        t = ip
+                    part += 1
+        return [dns.RRHeader( name=name, payload=dns.Record_A(address=t))], [], []
 
     def query(self, query, timeout=None):
         return defer.succeed(self._doDynamicResponse(query))
