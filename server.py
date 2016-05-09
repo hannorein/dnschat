@@ -10,10 +10,7 @@ with open("googlesecret.txt","r") as f:
     googlesecret = f.read().strip()
 
 def decode(s):
-    ds = ""
-    for c in s.split("-"):
-        ds += chr(int(c))
-    return ds
+    return "".join([chr(int(c)) for c in s.split("-")])
 
 class DynamicResolver(object):
     def _doDynamicResponse(self, query):
