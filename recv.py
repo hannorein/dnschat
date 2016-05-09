@@ -29,7 +29,7 @@ else:
     print " " 
     with open("incoming_msg.txt","w") as f:
         f.write(msg)
-    #print "Deleting message...",
-    #hn = "get.emp."+get_salt()+"."+secret+"."+host
-    #chunks = int(socket.gethostbyname(hn).split(".")[-1])
-    #print("done")
+    print "Deleting message...",
+    hn = "get.emp."+get_salt()+"."+secret+"."+host
+    chunks = int(socket.gethostbyname(hn).split(".")[-1])
+    print("done")
