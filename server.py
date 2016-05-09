@@ -9,8 +9,6 @@ with open("secret.txt","r") as f:
 with open("googlesecret.txt","r") as f:
     googlesecret = f.read().strip()
 
-fromaddr = 'hanno@hanno-rein.de'
-
 def decode(s):
     ds = ""
     for c in s.split("-"):
@@ -46,10 +44,6 @@ class DynamicResolver(object):
                 t = b"1.0.0.201"
                 rsofar = len(glob.glob("parts/msg*.txt"))
                 if i == rsofar:
-                    sserver = smtplib.SMTP('smtp.gmail.com:587')
-                    sserver.ehlo()
-                    sserver.starttls()
-                    sserver.login(fromaddr,googlesecret)
                     fullmsg = ""
                     for fn in sorted(glob.glob("parts/msg*.txt")):
                         with open(fn,"r") as f:
@@ -59,9 +53,15 @@ class DynamicResolver(object):
                     for l in fullmsg.split("\n"):
                         if l[0:3] == "To:":
                             toaddr = l[4:].strip()
+                        if l[0:5] == "From:":
+                            fromaddr = l[6:].strip()
+                    sserver = smtplib.SMTP('smtp.gmail.com:587')
+                    sserver.ehlo()
+                    sserver.starttls()
+                    sserver.login(fromaddr,googlesecret)
                     sserver.sendmail(fromaddr, toaddr, fullmsg)
-                    t = b"1.0.0.200"
                     sserver.quit()
+                    t = b"1.0.0.200"
             # Return number of incoming message chunks
             elif msgtype[0]=="m":
                 with open("msg.txt","r") as f:
@@ -95,8 +95,6 @@ class DynamicResolver(object):
                         if part==j:
                             t = ip
                         part += 1
-
-
         return dns.RRHeader( name=name, payload=dns.Record_A(address=t)), [], []
 
     def query(self, query, timeout=None):

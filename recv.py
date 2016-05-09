@@ -1,5 +1,4 @@
 import random
-import os
 import string
 import socket
 with open("secret.txt","r") as f:
@@ -14,7 +13,7 @@ def encode(s):
     return es[:-1]
 
 def get_salt():
-    return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
+    return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(10))
 
 print "Checking server for length of message...", 
 hn = "get.m."+get_salt()+"."+secret+"."+host
