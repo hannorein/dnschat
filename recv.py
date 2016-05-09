@@ -34,6 +34,8 @@ else:
     print "\nFull message reads:\n\n" 
     print(fullmsg)
     print " " 
+    with open("incoming_msg.txt","w") as f:
+        f.write(fullmsg)
     #print "Deleting message...",
     #hn = "get.emp."+get_salt()+"."+secret+"."+host
     #chunks = int(socket.gethostbyname(hn).split(".")[-1])
